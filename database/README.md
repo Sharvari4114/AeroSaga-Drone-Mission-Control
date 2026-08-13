@@ -1,45 +1,35 @@
-# AeroSaga Database & Data Layer
+# AeroSaga Database
 
-## Overview
+PostgreSQL database layer for the AeroSaga Drone Mission Control system.
 
-This directory contains the database design, schema, migrations,
-seed data, queries, and documentation for the AeroSaga autonomous
-drone mission control system.
+## Purpose
+
+The database stores application-level information required by the
+AeroSaga system, including drones, missions, mission steps, telemetry,
+and Temporal workflow execution references.
+
+Temporal.io remains responsible for durable workflow execution state.
 
 ## Database Technology
 
 - Database: PostgreSQL
-- Database Management Tool: pgAdmin 4
-- Migration Tool: Flyway
-- Backend Integration: Spring Boot
-- ORM: Spring Data JPA / Hibernate
-
-## Database Responsibilities
-
-The database layer is responsible for storing and managing:
-
-- Operator information
-- Drone information
-- Mission information
-- Mission steps
-- Drone telemetry
-- Workflow execution references
-
-## Planned Database Entities
-
-1. Operators
-2. Drones
-3. Missions
-4. Mission Steps
-5. Telemetry
-6. Workflow Executions
+- Database Name: aerosaga
+- Database Administration Tool: pgAdmin 4
 
 ## Directory Structure
 
 ```text
 database/
 ├── schema/
+│   ├── schema.sql
+│   ├── ER-diagram.md
+│   └── README.md
 ├── migrations/
+│   └── README.md
 ├── seed/
+│   ├── seed.sql
+│   └── README.md
 ├── queries/
+│   ├── queries.sql
+│   └── README.md
 └── README.md
