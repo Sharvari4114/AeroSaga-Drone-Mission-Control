@@ -25,11 +25,23 @@ database/
 │   ├── ER-diagram.md
 │   └── README.md
 ├── migrations/
-│   └── README.md
+│   ├── README.md
+│   └── V001__initial_schema.sql
 ├── seed/
 │   ├── seed.sql
 │   └── README.md
 ├── queries/
 │   ├── queries.sql
+│   ├── validation_queries.sql
 │   └── README.md
 └── README.md
+
+
+## Backup and Restore
+
+### Backup
+
+Create a PostgreSQL database backup using `pg_dump`:
+
+```bash
+pg_dump -U postgres -d aerosaga -F c -f aerosaga_backup.dump
