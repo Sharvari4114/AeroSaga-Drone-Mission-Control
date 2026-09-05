@@ -74,3 +74,105 @@ FROM mission_step_overview;
 -- 9. Verify latest telemetry view
 SELECT *
 FROM latest_drone_telemetry;
+
+
+--Invalid battery
+INSERT INTO drones
+(drone_code, battery_level)
+VALUES ('TEST-INVALID', 150);
+
+--Invalid drone status
+INSERT INTO drones
+(drone_code, status)
+VALUES ('TEST-STATUS', 'FLYING');
+
+--Invalid mission drone
+INSERT INTO missions
+(drone_id, mission_name)
+VALUES (9999, 'Invalid Mission');
+
+--Invalid mission status
+INSERT INTO missions
+(drone_id, mission_name, status)
+VALUES (1, 'Invalid Status Mission', 'RUNNING');
+
+
+--Invalid mission step order
+INSERT INTO mission_steps
+(mission_id, step_order, step_type)
+VALUES (1, 0, 'TAKEOFF');
+
+--Invalid step type
+INSERT INTO mission_steps
+(mission_id, step_order, step_type)
+VALUES (1, 99, 'FLY');
+
+
+
+----------------------------------------------------
+--Testing relationships
+--1.Drone → Mission
+SELECT
+    m.mission_id,
+    m.mission_name,
+    d.drone_code
+FROM missions m
+JOIN drones d
+ON m.drone_id = d.drone_id;
+
+
+--2.Mission → Mission Steps
+SELECT
+    m.mission_name,
+    ms.step_order,
+    ms.step_type
+FROM missions m
+JOIN mission_steps ms
+ON m.mission_id = ms.mission_id
+ORDER BY m.mission_id, ms.step_order;
+
+
+--3.Drone → Telemetry
+SELECT
+    d.drone_code,
+    t.latitude,
+    t.longitude,
+    t.speed,
+    t.recorded_at
+FROM drones d
+JOIN telemetry t
+ON d.drone_id = t.drone_id;
+
+
+--4.Mission → Temporal Workflow
+SELECT
+    m.mission_name,
+    w.temporal_workflow_id,
+    w.temporal_run_id,
+    w.status
+FROM missions m
+JOIN workflow_executions w
+ON m.mission_id = w.mission_id;
+
+
+
+------------------------------------------------------------
+----Verifying indexes
+SELECT indexname, tablename
+FROM pg_indexes
+WHERE schemaname = 'public'
+ORDER BY tablename, indexname;
+
+
+----------------------------------------------------------------
+---Verify all five tables have data
+
+SELECT 'drones' AS table_name, COUNT(*) AS record_count FROM drones
+UNION ALL
+SELECT 'missions', COUNT(*) FROM missions
+UNION ALL
+SELECT 'mission_steps', COUNT(*) FROM mission_steps
+UNION ALL
+SELECT 'telemetry', COUNT(*) FROM telemetry
+UNION ALL
+SELECT 'workflow_executions', COUNT(*) FROM workflow_executions;
